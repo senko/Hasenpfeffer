@@ -1,0 +1,32 @@
+import glob
+
+l4_cflags = ['-nostdinc', '-I/usr/lib/gcc-lib/i486-linux-gnu/3.3.6/include',
+         '-I../libk/include', '-I../libhpf/include', '-I../libk/arch_include/ia32', '-I/usr/local/include/']
+
+std_cflags = Split('-O0 -Wall')
+cflags = l4_cflags + std_cflags
+cxxflags = cflags + Split('-fno-exceptions -fno-rtti')
+
+l4_ldflags = Split('-L/usr/lib/gcc-lib/i486-linux-gnu/3.3.6 -lgcc -L/usr/local/lib/l4 -L../libk -L../libhpf')
+
+env = Environment(
+    CC = 'gcc-3.3',
+    CXX = 'g++-3.3',
+    CCFLAGS = cflags,
+    CXXFLAGS = cxxflags,
+    LINKFLAGS = l4_ldflags
+)
+
+l4build = Builder(action = 'ld -e _start -N -nostdlib -Ttext=00300000 $SOURCES $LINKFLAGS -o $TARGET')
+
+env['BUILDERS']['L4Link'] = l4build
+
+env['LINKFLAGS'] += Split('-ll4 -lio -lhpf -lio -lk')
+env['CCFLAGS'] += Split('-Iinclude -I../interfaces')
+
+objs = [ env.Object(fname) for fname in glob.glob('src/*.c') ]
+
+objs += [ '../libk/crt0.o' ]
+
+env.L4Link('olymp', objs)
+

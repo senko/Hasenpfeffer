@@ -1,0 +1,16 @@
+import glob
+import os
+import sys
+
+args = ''
+if len(sys.argv) > 1:
+  args = ' '.join(sys.argv[1:])
+
+subdirs = [ 'interfaces', 'libk', 'libc', 'libhpf', 'olymp', 'hermes', 'console', 'idedrv', 'scheme', 'basic', 'hello' ]
+cwd = os.getcwd()
+for dir in subdirs:
+    print "Building in directory " + dir
+    os.chdir(cwd + '/' + dir)
+    os.system('scons ' + args)
+os.chdir(cwd)
+

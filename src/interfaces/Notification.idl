@@ -1,0 +1,9 @@
+#include "types.h"
+
+[uuid(1)]
+interface Notification
+{
+    oneway void Notification(in Word_t type, in Word_t object, in Word_t flags);
+};
+
+

@@ -1,0 +1,215 @@
+ABOUT HASENPFEFFER
+==================
+
+Title: Design and implementation of a microkernel based operating system
+
+Microkernel based operating systems provide great flexibility and can be adapted for various purposes and hardware architectures, but only the new generation of microkernels allows performance similar to the monolithic kernels. As a part of this work, an operating system based on a L4 microkernel was designed and implemented. The system made use of available open source software. Due to the complexity of operating systems, using available off the shelf components greatly reduces the development time and resources. This work describes operating systems in general, features of L4 microkernel and the developed system.
+
+Keywords: operating systems, microkernel, open source
+
+( NOTE: Until I get this properly translated, here's the output of Google Translate, so that there's at least /some/ documentation about it.
+Apologies for the Engrish - it was either this, or no docs at all :(  )
+
+HASENPFEFFER OVERVIEW
+=====================
+
+The operating system is built into the practical part of this paper is based on the described L4 microkernel. It is organized as a set of components that communicate by PPI, so in that sense follows the idea of ​​QNX and HURD operating system. Such organization shall also be applied when building the operating system in the case SDI (System Design and Implementation) at the University of Karlsruhe [http://os.ibds.kit.edu/english/2196_2219.php].
+
+Because of the complexity of the topic, it is unrealistic to expect the possibility of building a complete usable operating system for personal computers. Therefore, emphasis is placed on the system architecture that enables quick and easy upgrades. Realized part of the system due to its small hardware requirements suitable for use in embedded systems, it is also suitable basis for possible future expansion and upgrades.
+
+In today's operating systems, much of the development should be given to drivers to different hardware component. As an example, drivers and hardware support for Linux kernel includes more than 70% of the code (measured in Linux 2.6.14.3 kernels, include the total number of lines of C code without any include directories and the number of lines of code inside the arch and the drivers directory).
+
+It is therefore desirable for the drivers as much as possible to use ready-made components of hardware support. This reduces development time and ensure greater system stability, assuming that the components are already used and tested before they are removed from these errors.
+
+Due to financial and technical reasons, while most suitable component with a free source code. Since the source code is free, it is not necessary to allocate licenses, which are cheaper final product. In this work, it means that it is permitted free redistribution of the constructed system.
+
+Open access to free code is desirable and the adjustment of components. This is most pronounced just when building the operating system, because the interface of the operating system and its mode of operation typically refers. That is why when you transfer to another system will always need additional adjustment.
+The actual system has the following features which will be described in more detail in the following chapters.
+To realized the system was chosen codename Hasenpfeffer.
+
+Architecture
+------------
+
+Hasenpfeffer is a set of components that perform above the L4 microkernel. Each component is realized as a task or a thread and makes some functionality (if it is a system component) or the user program. This division is an academic - in practice there is no difference between the system components and user programs. Overview of Hasenpfeffer system is shown in this figure:
+
+[Hello]  [TinyBasic] [TinyScm]
+[IdeDrv] [Ext2fs]    [Console]
+[MemMan] [TaskMan]   [Hermes]
+[....  L4 microkernel  .....]
+
+Gross primary components for the operation of the system and several utilities that show the way to build software or transferring the finished program Hasenpfeffer system. Memory manager (memory manager) and tasks (task manager), and root name serve  are the basic tasks required for work Hasenpfeffer system and use it (directly or indirectly) all other system components.
+
+To use the external unit manager take care of hard disk drives (IDE driver), the server file system (ext2fs) and a server that allows you to interact with the user via the keyboard and monitor (console server).
+
+Attached to the user program displays the process of writing software for Hasenpfeffer system in the programming language C. To write a new or transfer existing software with other systems facilitated by the existence of the standard C library functions (libc).
+
+With the system attached to the two programs transferred from the Linux operating system - interpreter BASIC programming language dialect (TinyBasic) and the programming language Scheme (TinyScheme), allowing the use of these languages ​​for software development.
+
+Inter-process communication
+---------------------------
+
+Components communicate using IPC. The system was defined by a few standard interfaces that represent the memory management, threads, and tasks, access files and name them and find different objects in the system. Some components generate multiple interfaces - a driver to access the file system (ext2fs) realizes the interface for naming facilities and access to files.
+
+Details of IPC are hidden from users in several levels. At the first level of abstraction for the definition and use of interfaces used IDL4 language. Interfaces are described in the IDL files from which using the tools available to generate the necessary files are included in programs that call and register interface.
+
+At the higher level functions available to programmers using the standard library. These functions hide the details to find remote components, calling remote procedures and interpretation of return values. For example when opening files and reading from her program uses the standard C library, and they in turn use the RPC interface defined in IDL files.
+
+Interface that defines the system are necessarily required for proper operation of the system. One of these sites is the "Pager" and realize it managers paging. The interface defines the methods for capturing and freeing of pages of memory, transmitting the second page of memory task and handle page fault message when the core programs-users access is forbidden or unmapped part of your virtual memory.
+
+Interface that is used to manage individual work tasks and thread is "TaskManager" interface. It includes methods for creating and stopping tasks and thread. In normal operation of the operating system is usually sufficient to only one component of this interface is realized, but for special needs and expand the functionality of the system can use the Task Manager and more.
+
+Hasenpfeffer has a unique way of naming all the objects in the system on which it will be more words later. This system uses the "DirectoryService" interface for setting up and solving the object names. This interface realized by all the components that constitute or include directories or tree structure, such as file systems.
+
+Interface, which in theory is not important for the operation of the system but in practice it is inevitable "File" and is used to access files. Specifically, the interface defines a way to read and modify objects and getting information about the size of the facility. The system does not guarantee any standardized meaning (semantics) of these functions so they can be used for completely different applications. Parameters of functions contain all the information needed to access part of the file (bookmark files, records the beginning and the length of the track).
+
+By submitting all information in each call to read or write the file server is achieved independence on the state's process (stateles server). In this case, the server does not have to remember that the processes that opened the file and where to find them. All information is required for access (including checking access rights) are in the call.
+
+In this way simplifies the realization of the server, reducing the possibility zagušivanja and facilitate recovery from errors on the server. In the event of a server and its re-launch a new instance can immediately respond to user needs no special support for it with his hand.
+
+Capabilities
+------------
+
+Security access to the facility in Hasenpfeffer operating system based on capaability. Processes that access an object should be the approach to visualize the capability of proving their right to access the facility. Capability is realized as a structure that contains information about the thread that keeps or possesses the object, select the object, access rights and the protection code that ensures the impossibility of unauthorized modification capabilities.
+
+There is no central security system that takes care of the capabilities. Each component provides a service takes care of creating and testing capabilities that relate to objects over which the service provider. Meaning of object determines the component itself and those to the outside world does not need (but can not) carry any information.
+
+Access rights are defined at the interface level. This means that different interfaces may use different access rights (as opposed to tightly-defined read, write and execute in the Unix world), but all the components that realize an interface must adhere to the same definitions. Applications, users can test the ability to determine what rights they possess. Interfaces are usually defined and functions to reduce the privileges. The user can call functions to reduce the privileges to create a new capability with reduced access rights. Such ability can submit another program or keep it and use it instead of the original, which itself reduces the privileges in the system (privilege drop).
+
+In Hasenpfeffer system there is no "major" hosts, the administrator (root) user profile (account) which would have all rights on the system. The privileges of users are defined as a set of capabilities that have processes that are running on their behalf. Hasenpfeffer supported architecture in which a special security subsystem takes care of identifying the user (via passwords, tokens, or some other method) and receiving skills on the basis of such identification. In this work, this system has not been achieved, but it is possible to build a trusted component on the basis of data on the identity of user submitted its processes necessary skills.
+
+Name System
+-----------
+
+Capabilities in Hasenpfeffer are used to specify objects in remote method calls. Because of reference ID's thread components and label objects within them, which can be different every time, ability is not constant (persistent). In addition, capabilities have been realized as a structure of numbers and are difficult to remember, users of the system.
+
+Therefore, for the naming of objects using text labels, or "names" of objects. Textual names are used in all current operating systems and are easily recognizable to users. Text the name is a path (path) to the facility, which usually consists of several components. For example path "/media/cdrom/dokument.txt" describes the file "dokument.txt" which is located inside the directory "cdrom", which is located inside the folder "media". The user can join these names and meaning even more so given the level of track can mean the text file "document" which is on the CD.
+
+The system developed in the naming of this paper is a distributed system that represents the mapping between the tracks and facilities capabilities. There is no single namespace (namespace) as the Unix, Windows and OSX system, but every job has its own local namespace. This system design is presented for the first time in plan9 operating system. The advantages of such organizations in that task, "see" only those objects in the system which allowed access (which increases the level of system security) and what the different tasks under the same name can see different objects.
+
+In today's Unix operating system files "/dev/console" (or similar names) usually has a special meaning - in her writing process writes to its standard output and read from the file is read from standard input process. Unix kernel must ensure that any program that opens this file, access to appropriate facilities. Local name spaces elegantly solve the problem by different objects for different tasks can have the same names.
+
+Plan9 system has a monolithic core, so the naming system so centralized. The system was developed as part of this paper is a distributed naming system consists of all the components that generate "DirectoryService" interface. Component that realizes this interface has a list of known paths and abilities that relate to these tracks. Capabilities can identify new components that generate "DirectoryService" interface which allows other components to keep information about podstabilma within the area of ​​naming.
+
+The root name server (root name server) is used only during the beginning of the system, and is usually used for the registration of drivers and key subsystems, ie the portion of a computer system that must use a global namespace. For local areas the root server is not used. Each task contains a table of names and pointers to other components that generate "DirectoryService" interface.
+
+Detection capabilities based on names (name resolution) is an iterative process. The program first looks in the local table and trying to find a path that a parent has requested paths (path X is parent of Y if the path component of path prefix X Y path components). He then takes the appropriate capacity and the server name that referncira the ability to try to identify the rest of the track. The procedure is repeated until the entire path is not detected. Discovered the ability to (resolved capability) provides information about the facility and the admissible operations, which means that the naming system does not name only objects but also the operations against them.
+
+Figure 11 shows the name system on your computer. In the upper right corner shows the route table and abilities contained in the task in hand. The process of discovering the path "/media/cdrom/dokument.txt" in this set is as follows:
+1st Viewing the local table. Record "is a prefix of the requested track, so the following query should be a thread, the object first
+2nd When asked, a thread inspects your table and discovers that the file "/media/cdrom" prefix requested paths, thus returning the data that shows the ability of the thread object D 1, and informs the caller that is 12 characters (length "/ media / cdrom" prefix ) from the track found.
+
+The program sends the query thread D, this time asking for "dokument.txt" name. thread restores the ability of showing the desired object and informs the caller that the path is successfully found.
+
+Existing open source components used
+------------------------------------
+
+In addition to the core, the Hasenpfeffer operating system used and other ready-made components with open source code. Used core is unchanged L4Ka:: Pistachio 0.4 kernel available from the project site L4Ka [http://www.l4ka.org/projects/pistachio/].
+
+Other components used are adapted Hasenpfeffer system with minimal changes. Components used were originally intended for small and embedded systems, which reduced the required changes to a minimum.
+
+To access the hard drive used is a driver for ATA drives and CD-ROM devices MINDRVR [http://www.ata-atapi.com/mindrvr.htm]. The program was originally designed for embedded systems based on DOS, and consists of one file with the source code and a header file. As part of this work is the use PIO (programmable I / O) mode, which does not use hardware breaks, and the only adjustment was the realization of the functions for reading and writing through byte memory-mapped peripherals ports (in and out * * instruction).
+
+Console access was achieved through the L4 debug primitives that allow reading a character from the keyboard and screen printing, or reading and writing of the serial port. In the paper, was used to screen writing and reading from the keyboard. For this component there was no need for any changes in existing code.
+
+Source code manager hard disk drive and the console was added and the functionality required in order to act as a component in Hasenpfeffer system, send and receive remote messages, and must register with the system of appointment.
+
+Standard C library function was taken from Kenge expensive package [http://www.ertos.nicta.com.au/software/kenge/]. Changed part of the library that deals with the input and output (stdio) in order to use RPC to communicate with servers to achieve I / O operations. The function fopen () has been changed and it hides all the logic necessary to locate the object based on the track. Developed a variant of the library (libk) used by the main task (which contains the components of the root memory manager and task manager). In this version of the library there is no standard C memory handling, there is no standard input (stdin) and standard output (stdout) is used only for login status thread and printing critical errors and displayed directly on screen using L4 primitives.
+
+As an example C program finished transferring the Hasenpfeffer operating system, the work involved and TinyBasic [http://www.programmersheaven.com/zone6/cat700/16060.htm] and TinyScheme [http://tinyscheme.sourceforge.net/] interpreters. Both programs are used to simply read from the keyboard and the screen printing and uploading files to be interpreted with a hard disk. Therefore, a good way of checking the performance of all other subsystems.
+
+Built components
+----------------
+
+Display generated and downloaded components is visible in this figure:
+
+[Hello]  [TinyBasic] [TinyScm]
+[IdeDrv] [Ext2fs]    [Console]
+[MemMan] [TaskMan]   [Hermes]
+[....  L4 microkernel  .....]
+
+
+The two primary components in the system are the root Hasenpfeffer memory manager (MemMan) and Task Manager (TaskMan). These two components are stored within a single task - the first task that runs when you boot the system (roottask). The first task must not only create and destroy thread and memory management is required immediately at the beginning of the system, so these two tasks best left to the first task.
+
+= Memory manager =
+
+Memory manager takes care of assigning the main computer memory and other tasks is responsible for the creation and destruction of address space. At the start, memory manager of S0 task required all the available computer memory. Foreclosed memory means is free and available to other tasks.
+
+When creating a new task manager creates a new memory address space and newly assigned him the task. When a thread attempts to access some of the challenges of hardware and memory page fault interrupt, memory manager finds a free site, assigned the task address space and lends (map) task page that contains the thread. When the task of destruction shall be destroyed and the address space and all pages are prepadale his mark once again free for further use.
+
+Inside is a list of free pages is kept in a field of bits (bitmap), which will set up (1) is a busy site and unlined (0) is a free site. Address spaces are kept in a single linked list, each occupied site saves the single linked list that belongs to a particular area.
+
+Algorithms and data structures used to store data on memory objects are not optimal, and give poor results in a large number of operations with the memory, but are easy to carry and use has accelerated the development of the system. Algorithms and structures would be no problems to change without affecting the rest of the system if it would be a need for it.
+
+= Task Manager =
+
+Task manager creates new tasks and thread and starts them and destroys. The task is defined as a thread that runs in the address space so that when you create a task creates a new thread and calls the memory manager in order to create a new address space. When the task of destroying destroying everything inside the thread address space and memory manager calls for the destruction of space. The task can be destroyed so that the individual thread destroy everything in it.
+
+Hasenpfeffer operating system for compatibility with other Unix systems and facilitate the development of software uses the ELF (Executable and Linking Format) standard picture format of the program. Task Manager contains ELF decoder that the number of octets in the memory is initialized parts (sections) memory task.
+
+= Root Name Server =
+
+Root name server (Hermes) is the root of the hierarchy of the global namespace (global name system) for those components that you need to use the global space. It is the subsystems and drivers who want to "register" on the system and be available to all other tasks.
+
+Based on the track registered in the global namespace when you run certain programs it is possible to construct a local name spaces containing only those objects to which the task or the user is allowed access.
+
+System Development
+------------------
+
+Hasenpfeffer operating system is not sufficiently developed to be able to support my own development (self-hosting). Therefore, as a development environment to use a different system and process cross-compilation (as a cross-compiling) to build programs that run under Hasenpfeffer system.
+
+As part of the programming part of this work as a development environment used Linux operating system (specifically, the distribution of Ubuntu Linux 5.10 - "Breezy Badger") due to the rich set of development tools that are available for this system. In principle it is possible to use the other POSIX-compliant operating systems, such as * BSD or MS Windows.
+
+C / C + + compiler that was used to project the GCC (GNU Compiler Collection) version 3.3. Newer Linux systems come with GCC 4.0 Compiler, but the development team L4Ka:: Pistachio version 3.3 of the project is recommended due to incompatibility with newer optimizations performed by version 4.0. To build the entire system has been used SCons tool instead of the standard tools make for better support for setting the working environment, and connectivity options translator components.
+
+For building automation software to use remote call procedure has been used already mentioned IDL4 tool developed under the project L4Ka.
+
+For the purpose of launching and testing of systems used are different Emulators PC architecture - VMWare Workstation and QEMU. In later stages of the project has been used mostly for QEMU support for easy manipulation of virtual hard drives and boot options without Requesting administrative privileges.
+
+The test environment consisted of a virtual hard disk that contained only an ext2 filesystem (without partitions) and pictures of floppy disks that went up a system (bootable floppy image).
+
+L4Ka:: Pistachio microkernel for software development supports the inclusion of the kernel debugger (KDB) to the very core. KDB provides an overview of data on existing thread, tasks, and memory mapped pages, capable of individual thread and various other information on the system. If KDB is included in the core, all the thread can use his services (entering the debugger, print and read messages from the keyboard) which is used in a single component system Hasenpfeffer.
+
+Developing for Hasenpfeffer
+---------------------------
+
+For a simple example of a typical "Hello World" program will present a method of software development for Hasenpfeffer system.
+
+Directory of the project consists of several sub-directories and configuration files for the SCons tool. Its subdirectories have the libc library functions, and libk libhpf, individual system components and interfaces defined in the system. For a new component is necessary to create a new directory (called "hello") and add it to the list of subdirectories in the configuration file "sconstruct.
+
+The program will ask for your name and then print a greeting message. At the beginning of the execution of the program will wait for a few seconds to up his printing would not be lost in the messages printed during boot. The code of the program is:
+
+	/* Hello World source code */
+	#include <stdio.h>
+	#include <l4/ipc.h>
+	#define SECOND 1000000UL
+
+	int main(int argc, char *argv[]) {
+	    char buf[1024];
+	    L4_Sleep(L4_TimePeriod(4 * SECOND));
+	    printf("Hi, I'm %s!\nWho are you: ", argv[0]);
+	    fgets(buf, 1023, stdin);
+	    printf("Howdy, %s\n", buf);
+	    return 0;
+	}
+
+Then it is necessary to create sconstruct configuration file that will manage the construction components. The file says compiler and its options, a library with which the program should be linked to similar items. For this example, it is enough to copy a file from the directory sconstruct another user of, say, from the basic (TinyBasic interpreter) directory. The file is then only necessary to change the name of the final program of "basic" to "hello".
+
+Then it takes to run scons tool from the main directory of the project and wait until the entire system build. After the construction of the hello directory is created the program. To test the program can be used already prepared environment using QEMU computer emulator.
+
+The test environment based on the directory with the programs and creates a template floppy disk image to boot. The program is needed to copy into a subdirectory "bootdisk-data" test environment and give it to the list of modules in the configuration file, GRUB boot loader "bootdisk-data/boot/grub/menu.lst. Record in this file looks like this:
+
+	# GRUB1 config
+	title = Hello World
+	kernel=/kickstart
+	module=/ia32-kernel
+	module=/sigma0
+	module=/olymp
+	module=/hermes
+	module=/console
+	module=/hello
+
+When you boot the system will load the L4 microkernel (kickstart and ia32-kernel module), S0 root memory manager (sigma0), the root task with the memory manager and task manager (Olymp), root name server (Hermes), the driver console (console) and just developed a program (hello).
+
+Additional script makebootdisk.sh creates a disk image which is then be loaded into the emulator, which automates the script run.sh.
+
+

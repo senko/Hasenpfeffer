@@ -1,0 +1,21 @@
+import glob
+
+env = Environment()
+
+idl4client = Builder(action = 'idl4 -iv4 -pia32 -ffastcall -c $SOURCE -h $TARGET')
+env['BUILDERS']['IDL4Client'] = idl4client
+idl4server = Builder(action = 'idl4 -iv4 -pia32 -ffastcall -s $SOURCE -h $TARGET')
+env['BUILDERS']['IDL4Server'] = idl4server
+idl4stub = Builder(action = 'idl4 -iv4 -pia32 -ffastcall -t $SOURCE -o $TARGET')
+env['BUILDERS']['IDL4Stub'] = idl4stub
+
+
+# env.Command('Pager_client.h', 'Pager.idl', 'idl4 -iv4 -pia32 -ffastcall -c $SOURCE -h $TARGET')
+
+for idl in glob.glob('*.idl'):
+    root = idl[:-4]
+    env.IDL4Client('client/' + root + '.h', idl)
+    env.IDL4Server('server/' + root + '.h', idl)
+    env.IDL4Stub('stub/' + root + '.c', idl)
+
+

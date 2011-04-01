@@ -1,0 +1,10 @@
+}q(Usys_fputc.oq(cSCons.Node.FS
+BuildInfo
+qoq}q(UbsigqU dc31805aee1893d900631b46e377e695qU	bimplicitq]q	Ubdependsq
+]qUbdependsigsq]qUbactsigqU 73ecc097b33023520bab8203a7c0f6d2qUbimplicitsigsq]qUbactqU}gcc-3.3 -O0 -g -Wall -nostdinc -DTHREAD_SAFE -I/usr/local/include -Iinclude -Iarch_include/ia32 -c -o sys_fputc.o sys_fputc.cqUbsourcesq]qU!src/sys-l4_rootserver/sys_fputc.cqaUbsourcesigsq]qU 4a261d5d15f94a540d86672b7fb5f67dqaubU
+sys_exit.cq(hoq}q(U	timestampqJÚCUcsigqU f47cd92935d5c5fe388cfba525636fa4qubU
+sys_exit.oq (hoq!}q"(hU e00bb2835dbd1f518d1e3e79ed6cfb8fq#h]q$h
+]q%h]q&hU 7839126ff2f662a97c6ea199ec760c8dq'h]q(hU{gcc-3.3 -O0 -g -Wall -nostdinc -DTHREAD_SAFE -I/usr/local/include -Iinclude -Iarch_include/ia32 -c -o sys_exit.o sys_exit.cq)h]q*U src/sys-l4_rootserver/sys_exit.cq+ah]q,haubUsys_fputc.cq-(hoq.}q/(hJÚChhubUsys_stdio.oq0(hoq1}q2(hU 4b2d30b1bec757db204084213d379acdq3h]q4h
+]q5h]q6hU fa0b49233dcc5b115faa877557531c8fq7h]q8hU}gcc-3.3 -O0 -g -Wall -nostdinc -DTHREAD_SAFE -I/usr/local/include -Iinclude -Iarch_include/ia32 -c -o sys_stdio.o sys_stdio.cq9h]q:U!src/sys-l4_rootserver/sys_stdio.cq;ah]q<U aa123f038195f58116cfbc89f09c510fq=aubUsys_fgetc.cq>(hoq?}q@(hJÚChU c76515050406127ae5061c0f2d3ad8d2qAubUsys_abort.cqB(hoqC}qD(hJÚChU d8f691946af96b47ea5a9cd01233ccfeqEubUsys_fgetc.oqF(hoqG}qH(hU faa21f37fad6cf4fcff1a32b6a149823qIh]qJh
+]qKh]qLhU c7e19be2e9a3507bd0e5877eb88142a8qMh]qNhU}gcc-3.3 -O0 -g -Wall -nostdinc -DTHREAD_SAFE -I/usr/local/include -Iinclude -Iarch_include/ia32 -c -o sys_fgetc.o sys_fgetc.cqOh]qPU!src/sys-l4_rootserver/sys_fgetc.cqQah]qRhAaubUsys_abort.oqS(hoqT}qU(hU dd7b1ada3ee33fbbfa41eaa8ee6a985dqVh]qWh
+]qXh]qYhU 943311253f9ab5f0af529867b4648d02qZh]q[hU}gcc-3.3 -O0 -g -Wall -nostdinc -DTHREAD_SAFE -I/usr/local/include -Iinclude -Iarch_include/ia32 -c -o sys_abort.o sys_abort.cq\h]q]U!src/sys-l4_rootserver/sys_abort.cq^ah]q_hEaubUsys_stdio.cq`(hoqa}qb(hJÚChh=ubu.

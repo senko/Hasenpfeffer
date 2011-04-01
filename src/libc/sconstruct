@@ -1,0 +1,31 @@
+import glob
+
+arch = 'ia32'
+# system = 'l4_rootserver'
+system = 'hasenpfeffer'
+fstype = 'bootinfo'
+
+includes = '-I/usr/local/include -Iinclude -Iarch_include/%s' % arch
+flags = '-O0 -g -Wall -nostdinc -DTHREAD_SAFE'
+
+includes += ' -I../interfaces -I../libhpf/include'
+
+env = Environment(CC = 'gcc-3.3', CCFLAGS = flags + ' ' + includes)
+
+src = glob.glob('src/*.c') \
+        + glob.glob('src/arch-' + arch + '/*.c') \
+        + glob.glob('src/arch-' + arch + '/*.S') \
+        + glob.glob('src/sys-' + system + '/*.c') \
+        + glob.glob('src/sys-' + system + '/arch-' +  arch + '/*.c') \
+        + glob.glob('src/sys-' + system + '/arch-' +  arch + '/*.S')
+
+objs = [ env.Object(x) for x in src ]
+
+env.StaticLibrary('libc.a', objs)
+
+# fopen_obj = env.Object('src/fs-%s/fopen.c' % fstype)
+# env.StaticLibrary('libfs_' + fstype + '.a', fopen_obj)
+
+crt_obj = env.Object('crt/arch-%s/crt0.S' % (arch))
+env.Command('crt0.o', crt_obj, 'cp $SOURCE $TARGET')
+

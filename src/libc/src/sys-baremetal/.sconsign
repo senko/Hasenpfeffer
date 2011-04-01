@@ -1,0 +1,4 @@
+}q(Usys_abort.oq(cSCons.Node.FS
+BuildInfo
+qoq}q(UbsigqU 616b85e7ad3b2c8e6984dafebd643608qU	bimplicitq]q	Ubdependsq
+]qUbdependsigsq]qUbactsigqU 943311253f9ab5f0af529867b4648d02qUbimplicitsigsq]qUbactqU}gcc-3.3 -O0 -g -Wall -nostdinc -DTHREAD_SAFE -I/usr/local/include -Iinclude -Iarch_include/ia32 -c -o sys_abort.o sys_abort.cqUbsourcesq]qUsrc/sys-baremetal/sys_abort.cqaUbsourcesigsq]qU 893be026241cc5f33e9aeddf5c2db73eqaubUsys_abort.cq(hoq}q(U	timestampqJÚCUcsigqhubu.

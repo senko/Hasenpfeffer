@@ -1,0 +1,5 @@
+}q(Uhello.oq(cSCons.Node.FS
+BuildInfo
+qoq}q(UbsigqU ded02302b69b5911b14dd729355474b1qU	bimplicitq]q	Ubdependsq
+]qUbdependsigsq]qUbactsigqU e1fa889156e01cfb35607988ec91cdb3qUbimplicitsigsq]qUbactqUÓgcc-3.3 -nostdinc -I/usr/lib/gcc-lib/i486-linux-gnu/3.3.6/include -I../interfaces -I../libc/include -I../libhpf/include -I../libc/arch_include/ia32 -I/usr/local/include/ -O0 -Wall -Iinclude -c -o hello.o hello.cqUbsourcesq]qUhello.cqaUbsourcesigsq]qU 6a4616310369b43ecc0377d7b2564088qaubUhelloq(hoq}q(hU e0bbe6ba19b121bca29f394a7f96e7e3qh]qh
+]qh]q hU e8ec35c99102647424c5c47932ca88f5q!h]q"hU­ld -e _start -N -nostdlib -Ttext=00300000 hello.o crt0.o -L/usr/lib/gcc-lib/i486-linux-gnu/3.3.6 -L/usr/local/lib/l4 -L../libc -L../libhpf -ll4 -lhpf -lc -ll4 -lgcc -o helloq#h]q$(hU4/home/senko/src/l4ka/hasenpfeffer/system/libc/crt0.oq%eh]q&(hU 618c8f84b4eceddc9d6f3dd86b18012fq'eubu.

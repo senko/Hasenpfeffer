@@ -1,0 +1,34 @@
+#include "types.h"
+
+[uuid(2)]
+interface DirectoryService
+{
+    /* Registers a new path in the directory service
+     * Params:
+     *   cap - capability designating the object under which to add a new path (must have write priv)
+     *   path - a path for the new object
+     *   object - capability for the object to be added
+     *   newcap - newly created capability describing the created directory path (full priv)
+     *
+     *   if 'object' is NilCap (0), just create a path component internally - this can be used to create
+     *   directories
+     */
+    boolean RegisterPath(in Capability_t cap, in string<4096> path, in Capability_t object, out Capability_t newcap);
+
+    /* Unregisters a path
+     * Params:
+     *   cap - capability designating the object to remove
+     */
+    boolean UnregisterPath(in Capability_t cap);
+
+    boolean ResolvePath(in Capability_t cap, in string<4096> path, out Capability_t object, out int resolved_chars);
+
+    boolean LessenCapability(in Capability_t cap, in Word_t flags, out Capability_t newcap);
+
+    /* Retrieves the root capability for this directory service
+     * Requires full priv capability for the thread implementing the service
+     * Can be used only by root thread
+     */
+    boolean GetRootCapability(out Capability_t newcap);
+
+};

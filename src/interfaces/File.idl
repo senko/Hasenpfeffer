@@ -1,0 +1,19 @@
+#include "types.h"
+
+typedef sequence<octet, 4096> byteseq_t;
+
+[uuid(3)]
+interface File
+{
+    boolean Read(
+            in Capability_t cap,
+            in unsigned long offset,
+            out byteseq_t buffer,
+            inout unsigned long size);
+
+    unsigned long Write(in Capability_t cap, in unsigned long offset, in string<4096> buffer, in unsigned long size);
+
+    unsigned long Size(in Capability_t cap);
+};
+
+

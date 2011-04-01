@@ -1,0 +1,13 @@
+import glob
+
+includes = '-I../libc/include -I../libc/arch_include/ia32 -I/usr/local/include -Iinclude -I/usr/local/include/idl4 -I../interfaces'
+flags = '-O0 -g -Wall -nostdinc -DTHREAD_SAFE'
+
+env = Environment(CC = 'gcc-3.3', CCFLAGS = flags + ' ' + includes)
+
+src = glob.glob('src/*.c')
+
+objs = [ env.Object(x) for x in src ]
+
+env.StaticLibrary('libhpf.a', objs)
+

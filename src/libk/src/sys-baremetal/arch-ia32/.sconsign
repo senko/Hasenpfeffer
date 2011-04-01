@@ -1,0 +1,4 @@
+}q(Usys_stdio.oq(cSCons.Node.FS
+BuildInfo
+qoq}q(UbsigqU 66df700c2877469319868f25c47dfea7qU	bimplicitq]q	Ubdependsq
+]qUbdependsigsq]qUbactsigqU fa0b49233dcc5b115faa877557531c8fqUbimplicitsigsq]qUbactqU}gcc-3.3 -O0 -g -Wall -nostdinc -DTHREAD_SAFE -I/usr/local/include -Iinclude -Iarch_include/ia32 -c -o sys_stdio.o sys_stdio.cqUbsourcesq]qU'src/sys-baremetal/arch-ia32/sys_stdio.cqaUbsourcesigsq]qU 7da5abf4ff5dd1115140ff55d958e43fqaubUsys_stdio.cq(hoq}q(U	timestampqJÚCUcsigqU 6e1581f540385ea0e9b5ecc3cf4f95a2qubu.

@@ -1,0 +1,14 @@
+
+#include "types.h"
+
+interface Pager
+{
+    [kernelmsg(idl4::pagefault)]
+    void pagefault(in IntPtr_t addr, in IntPtr_t uip, [max_value(7)] in short privileges, out fpage page);
+
+    boolean RequestPage(in IntPtr_t addr, in Word_t size, out fpage page);
+    boolean ReleasePage(in IntPtr_t addr, in Word_t size);
+
+    boolean TransferPage(in Capability_t cap, in IntPtr_t addr, in Word_t size, in IntPtr_t dest_addr, in Word_t dest_size);
+};
+
