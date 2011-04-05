@@ -1,31 +1,21 @@
 ABOUT HASENPFEFFER
 ==================
 
-Title: Design and implementation of a microkernel based operating system
-
 Microkernel based operating systems provide great flexibility and can be adapted for various purposes and hardware architectures, but only the new generation of microkernels allows performance similar to the monolithic kernels. As a part of this work, an operating system based on a L4 microkernel was designed and implemented. The system made use of available open source software. Due to the complexity of operating systems, using available off the shelf components greatly reduces the development time and resources. This work describes operating systems in general, features of L4 microkernel and the developed system.
 
-Keywords: operating systems, microkernel, open source
+Why Hasenpfeffer was created
+============================
+
+The Hasenpfeffer operating system was built as a practical part of a diploma thesis on Faculty of Electrical Engineering and Computing in Zagreb, Croatia. The operating system is based on the L4 microkernel, and is organised as a set of component communicating using IPC. In that sense, the design follows the ideas of QNX and HURD operating systems. Similar architecture is also used for systems built at System Design and Implementation courses at Karlsruhe Institute of Technology [http://os.ibds.kit.edu/english/2196_2219.php].
+
+Because of the complexity of the topic, it's unrealistic to attempt to build a complete usable general-purpose operating system. Instead, the emphasis was placed on designing the system so that it could be easily extended. As the system has minimal hardware requirements, it can be run on embedded or old hardware.
+
+In today's operating systems, the majority of the (kernel/system) code is the drivers, as opposed to the OS core. As an example, drivers and hardware support in Linux kernel includes more than 70% of the code (measured in Linux 2.6.14.3 kernel by comparing the total number of lines of C code without any include directories, and the number of lines of C code inside the arch and drivers directories). So it makes sense to try and reuse driver code as much as possible, and to use existing available third-party components for hardware support.
+
+For technical and financial reasons, all of the components that Hasenpfeffer is built from are open source. Using existing open source components allowed making any adaptations neccessary to port the components to the new operating system, as well as being cheaper than buying proprietary software. Also, the end result is completely free software, which can be freely redistributed and modified.
 
 ( NOTE: Until I get this properly translated, here's the output of Google Translate, so that there's at least /some/ documentation about it.
 Apologies for the Engrish - it was either this, or no docs at all :(  )
-
-HASENPFEFFER OVERVIEW
-=====================
-
-The operating system is built into the practical part of this paper is based on the described L4 microkernel. It is organized as a set of components that communicate by PPI, so in that sense follows the idea of ​​QNX and HURD operating system. Such organization shall also be applied when building the operating system in the case SDI (System Design and Implementation) at the University of Karlsruhe [http://os.ibds.kit.edu/english/2196_2219.php].
-
-Because of the complexity of the topic, it is unrealistic to expect the possibility of building a complete usable operating system for personal computers. Therefore, emphasis is placed on the system architecture that enables quick and easy upgrades. Realized part of the system due to its small hardware requirements suitable for use in embedded systems, it is also suitable basis for possible future expansion and upgrades.
-
-In today's operating systems, much of the development should be given to drivers to different hardware component. As an example, drivers and hardware support for Linux kernel includes more than 70% of the code (measured in Linux 2.6.14.3 kernels, include the total number of lines of C code without any include directories and the number of lines of code inside the arch and the drivers directory).
-
-It is therefore desirable for the drivers as much as possible to use ready-made components of hardware support. This reduces development time and ensure greater system stability, assuming that the components are already used and tested before they are removed from these errors.
-
-Due to financial and technical reasons, while most suitable component with a free source code. Since the source code is free, it is not necessary to allocate licenses, which are cheaper final product. In this work, it means that it is permitted free redistribution of the constructed system.
-
-Open access to free code is desirable and the adjustment of components. This is most pronounced just when building the operating system, because the interface of the operating system and its mode of operation typically refers. That is why when you transfer to another system will always need additional adjustment.
-The actual system has the following features which will be described in more detail in the following chapters.
-To realized the system was chosen codename Hasenpfeffer.
 
 Architecture
 ------------
